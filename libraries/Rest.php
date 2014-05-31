@@ -111,14 +111,14 @@ class REST
 	 * @author	Phil Sturgeon
 	 * @version 1.0
 	 */
-    public function get($uri, $params = array(), $format = NULL)
+    public function get($uri, $params = array(), $format = NULL, $raw = false)
     {
         if ($params)
         {
         	$uri .= '?'.(is_array($params) ? http_build_query($params) : $params);
         }
 
-    	return $this->_call('get', $uri, NULL, $format);
+    	return $this->_call('get', $uri, NULL, $format,$raw);
     }
 
 	/**
@@ -128,9 +128,9 @@ class REST
 	 * @author	Phil Sturgeon
 	 * @version 1.0
 	 */
-    public function post($uri, $params = array(), $format = NULL)
+    public function post($uri, $params = array(), $format = NULL, $raw = false)
     {
-        return $this->_call('post', $uri, $params, $format);
+        return $this->_call('post', $uri, $params, $format,$raw);
     }
 
 	/**
@@ -140,9 +140,9 @@ class REST
 	 * @author	Phil Sturgeon
 	 * @version 1.0
 	 */
-    public function put($uri, $params = array(), $format = NULL)
+    public function put($uri, $params = array(), $format = NULL, $raw = false)
     {
-        return $this->_call('put', $uri, $params, $format);
+        return $this->_call('put', $uri, $params, $format,$raw);
     }
 
 	/**
@@ -152,9 +152,9 @@ class REST
 	 * @author	Dmitry Serzhenko
 	 * @version 1.0
 	 */
-	public function patch($uri, $params = array(), $format = NULL)
+	public function patch($uri, $params = array(), $format = NULL, $raw = false)
 	{
-		return $this->_call('patch', $uri, $params, $format);
+		return $this->_call('patch', $uri, $params, $format,$raw);
 	}
 
 	/**
@@ -164,9 +164,9 @@ class REST
 	 * @author	Phil Sturgeon
 	 * @version 1.0
 	 */
-    public function delete($uri, $params = array(), $format = NULL)
+    public function delete($uri, $params = array(), $format = NULL, $raw = false)
     {
-        return $this->_call('delete', $uri, $params, $format);
+        return $this->_call('delete', $uri, $params, $format,$raw);
     }
 
 	/**
@@ -223,7 +223,7 @@ class REST
 	 * @author	Phil Sturgeon
 	 * @version 1.0
 	 */
-    protected function _call($method, $uri, $params = array(), $format = NULL)
+    protected function _call($method, $uri, $params = array(), $format = NULL, $raw = false)
     {
     	if ($format !== NULL)
 		{
@@ -274,7 +274,11 @@ class REST
         $response = $this->_ci->curl->execute();
 
         // Format and return
-        return $this->_format_response($response);
+        if(!$raw){
++           return $this->_format_response($response); 
++        }else{
++            return $response;
++        }
     }
 
 	/**
